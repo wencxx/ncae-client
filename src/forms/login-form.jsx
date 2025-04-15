@@ -8,6 +8,7 @@ import { useAuth } from "@/auth/auth-context";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export function LoginForm({ className, ...props }) {
   const navigate = useNavigate()
@@ -104,9 +105,9 @@ export function LoginForm({ className, ...props }) {
               </Button>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
+                <Link to='/register' className="underline underline-offset-4">
                   Sign up
-                </a>
+                </Link>
               </div>
             </div>
           </form>

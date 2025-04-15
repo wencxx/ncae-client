@@ -14,6 +14,7 @@ import { PlusCircle } from "lucide-react";
 
 export function ExaminationForm({ onSubmit, onCancel }) {
   const [quizName, setName] = useState("");
+  const [timeLimit, setTimeLimit] = useState(1);
   const [questions, setQuestions] = useState([
     {
       text: "",
@@ -60,6 +61,7 @@ export function ExaminationForm({ onSubmit, onCancel }) {
 
     onSubmit({
       quizName,
+      timeLimit,
       questions: questionsWithIds,
     });
   };
@@ -75,6 +77,17 @@ export function ExaminationForm({ onSubmit, onCancel }) {
               value={quizName}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter examination name"
+              required
+            />
+          </div>
+          <div className="space-y-2 mt-2">
+            <Label htmlFor="exam-name">Time Limit (in minutes)</Label>
+            <Input
+              id="exam-name"
+              value={timeLimit}
+              type="number"
+              onChange={(e) => setTimeLimit(e.target.value)}
+              placeholder="Enter time limit"
               required
             />
           </div>

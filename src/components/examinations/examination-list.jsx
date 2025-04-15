@@ -36,8 +36,10 @@ export function ExaminationList() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   // handle add examination
+  const [loading, setLoading] = useState(false)
   const handleAddExamination = async (examination) => {
     try {
+      setLoading(true)
       const newExamination = {
         ...examination,
         id: crypto.randomUUID(),
@@ -56,7 +58,7 @@ export function ExaminationList() {
       );
 
       if (res.status === 200) {
-        toast.success("Added status successfully");
+        toast.success("Added examination successfully");
         getExamination();
         setIsFormOpen(false);
       }
@@ -64,6 +66,8 @@ export function ExaminationList() {
       toast.error("Failed to add new examination", {
         description: "Please try again later.",
       });
+    } finally {
+      setLoading(false)
     }
   };
 
@@ -138,6 +142,7 @@ export function ExaminationList() {
           <TableRow>
             <TableHead>Examination Name</TableHead>
             <TableHead>Number of Questions</TableHead>
+            <TableHead>Time Limit</TableHead>
             <TableHead>Created Date</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Actions</TableHead>
@@ -149,6 +154,7 @@ export function ExaminationList() {
               <TableRow key={exam._id}>
                 <TableCell className="font-medium">{exam.quizName}</TableCell>
                 <TableCell>{exam.questions.length}</TableCell>
+                <TableCell>{exam.timeLimit}</TableCell>
                 <TableCell>{formatDate(exam.createdAt)}</TableCell>
                 <TableCell>{exam.status}</TableCell>
                 <TableCell>
@@ -178,6 +184,7 @@ export function ExaminationList() {
           </DialogHeader>
           <ExaminationForm
             onSubmit={handleAddExamination}
+            loading={loading}
             onCancel={() => setIsFormOpen(false)}
           />
         </DialogContent>

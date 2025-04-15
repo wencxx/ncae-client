@@ -5,6 +5,7 @@ import Layout from "@/layout/layout";
 import RedirectIfAuthenticated from "./auth/redirect";
 
 import Login from "./pages/login";
+import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
 import Strand from "./pages/strands";
 import Examinations from "./pages/examinations";
@@ -20,6 +21,14 @@ export default function App() {
             element={
               <RedirectIfAuthenticated>
                 <Login />
+              </RedirectIfAuthenticated>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <RedirectIfAuthenticated>
+                <Register />
               </RedirectIfAuthenticated>
             }
           />
