@@ -38,10 +38,10 @@ export function LoginForm({ className, ...props }) {
       if (res.status === 200) {
         login(res.data, res.data.token);
 
-        if(res.data.role === 'admin'){
-          navigate("/strands");
-        }else{
+        if(res.data.role === 'user'){
           navigate("/");
+        }else{
+          navigate("/strands");
         }
       } else if (res.status === 401) {
         toast.error("Invalid password", {

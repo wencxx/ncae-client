@@ -6,7 +6,7 @@ const RedirectIfAuthenticated = ({ children }) => {
   const location = useLocation();
 
   if (auth && location.pathname === "/login") {
-    if(role === 'superAdmin'){
+    if(role === 'admin'){
       return <Navigate to="/strands" replace />;
     }else{
       return <Navigate to="/" replace />;
