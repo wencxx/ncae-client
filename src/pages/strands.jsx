@@ -119,6 +119,60 @@ function Strand() {
     }
   };
 
+  // update strand
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false)
+  const [strandToUpdate, setStrandToUpdate] = useState(null)
+
+  const updateStrand = (strand) => {
+    if(strand){
+      formUpdate.reset(strand)
+      setStrandToUpdate(strand)
+      setOpenUpdateDialog(true)
+    }else{
+      setOpenUpdateDialog(false)
+    }
+  }
+
+  const [updating, setUpdating] = useState(false);
+
+  const formUpdate = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      strandAbbr: "",
+      strandName: "",
+      passingGrade: "",
+    },
+  });
+
+  const onUpdate = async (values) => {
+    console.log(values);
+
+    try {
+      setUpdating(true);
+      const res = await axios.put(
+        `${import.meta.env.VITE_ENDPOINT}strands/update/${strandToUpdate._id}`,
+        values,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        getStrand();
+        toast.success("Updated strand successfully");
+        setOpenUpdateDialog(false);
+      }
+    } catch (error) {
+      toast.error("Server error", {
+        description: "Please try again later",
+      });
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   // delete strand
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const [strandToDelete, setStrandToDelete] = useState("");
@@ -141,7 +195,7 @@ function Strand() {
         }
       );
 
-      console.log(res.data)
+      console.log(res.data);
 
       if (res.status === 200) {
         toast.success("Deleted strand successfully");
@@ -152,7 +206,7 @@ function Strand() {
         });
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast.error("Failed deleting strand", {
         description: "Please try again later.",
       });
@@ -184,7 +238,14 @@ function Strand() {
         <TableBody>
           {strands.length ? (
             strands.map((strand) => (
-              <TableRow key={strand._id} className={`${deleting && strand._id === strandToDelete && 'animate-pulse bg-gray-200'}`}>
+              <TableRow
+                key={strand._id}
+                className={`${
+                  deleting &&
+                  strand._id === strandToDelete &&
+                  "animate-pulse bg-gray-200"
+                }`}
+              >
                 <TableCell className="font-medium">
                   {strand.strandAbbr}
                 </TableCell>
@@ -197,6 +258,7 @@ function Strand() {
                       color="green"
                       size={18}
                       className="cursor-pointer"
+                      onClick={() => updateStrand(strand)}
                     />
                     <Trash
                       color="red"
@@ -288,6 +350,76 @@ function Strand() {
         </DialogContent>
       </Dialog>
 
+      {/* dialog for edit */}
+      <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Strand</DialogTitle>
+            <DialogDescription>
+              Change fields you want to update.
+            </DialogDescription>
+          </DialogHeader>
+          <div>
+            <Form {...formUpdate}>
+              <form
+                onSubmit={formUpdate.handleSubmit(onUpdate)}
+                className="space-y-8"
+              >
+                <FormField
+                  control={formUpdate.control}
+                  name="strandAbbr"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Strand Code</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ex. HUMSS" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formUpdate.control}
+                  name="strandName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Strand Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Ex. Humanities and Social Sciences"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formUpdate.control}
+                  name="passingGrade"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Passing Grade (in %)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Ex. 90" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className={`float-end ${updating && "animate-pulse"}`}
+                  disabled={updating}
+                >
+                  {updating ? "Updating Strand" : "Update Strand"}
+                </Button>
+              </form>
+            </Form>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* alert dialog for deleting */}
       <AlertDialog open={openAlertDialog} onOpenChange={setOpenAlertDialog}>
         <AlertDialogContent>
@@ -301,10 +433,12 @@ function Strand() {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              className={`bg-red-500 hover:bg-red-600 ${deleting && 'animate-pulse'}`}
+              className={`bg-red-500 hover:bg-red-600 ${
+                deleting && "animate-pulse"
+              }`}
               onClick={() => confirmDelete()}
             >
-              {deleting ? 'Deleting' : 'Delete'}
+              {deleting ? "Deleting" : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

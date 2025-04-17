@@ -14,6 +14,7 @@ import { useAuth } from "@/auth/auth-context";
 import PreferredStrand from "@/components/dashboard/preferred-strand";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function StudentProfile() {
   const { userData } = useAuth();
@@ -29,36 +30,6 @@ export default function StudentProfile() {
 
   // get preferred strand
   const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    const getStrands = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_ENDPOINT}strands/get`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        if (res.status === 200) {
-          setItems(res.data);
-        } else {
-          setItems([]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getStrands();
-  }, []);
-
-  const filterStrand = (strandId) => {
-    const strand = items.find((item) => item._id === strandId);
-    return strand;
-  };
 
   return (
     <div className="px-4">
@@ -142,20 +113,20 @@ export default function StudentProfile() {
             {userData && userData.prefferedStrand?.length ? (
               <div className="space-y-4">
                 {userData.prefferedStrand.map((strand, index) => (
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3" key={index}>
                     <Badge
-                      className={`bg-${
-                        index === 0 ? "green" : index === 1 ? "blue" : "purple"
-                      }-600 hover:bg-green-700`}
+                      className={`${
+                        index === 0 ? "bg-green-500" : index === 1 ? "bg-blue-500" : "bg-purple-500"
+                      }`}
                     >
                       {index + 1}
                     </Badge>
                     <div>
                       <h3 className="font-medium">
-                        {filterStrand(strand).strandAbbr}
+                        {strand?.strandAbbr}
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        {filterStrand(strand).strandName}
+                        {strand?.strandName}
                       </p>
                     </div>
                   </div>
@@ -184,10 +155,12 @@ export default function StudentProfile() {
             </p>
           </CardContent>
           <CardFooter>
-            <Button className="w-full">
-              <BookOpen className="mr-2 h-4 w-4" />
-              Take Examination
-            </Button>
+            <Link to="/examinations-list" className="w-full">
+              <Button className="w-full">
+                <BookOpen className="mr-2 h-4 w-4" />
+                Take Examination
+              </Button>
+            </Link>
           </CardFooter>
         </Card>
 
@@ -205,10 +178,12 @@ export default function StudentProfile() {
             </p>
           </CardContent>
           <CardFooter>
-            <Button variant="outline" className="w-full">
-              <FileText className="mr-2 h-4 w-4" />
-              View Results
-            </Button>
+            <Link to="/results" className="w-full">
+              <Button variant="outline" className="w-full">
+                <FileText className="mr-2 h-4 w-4" />
+                View Results
+              </Button>
+            </Link>
           </CardFooter>
         </Card>
       </div>

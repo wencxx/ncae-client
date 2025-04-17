@@ -10,12 +10,12 @@ export const AuthProvider = ({ children }) => {
   });
 
   const [userData, setUserData] = useState(null);
-  const [role, setRole] = useState(localStorage.getItem('role') || null);
+  const [role, setRole] = useState(localStorage.getItem("role") || null);
 
   const login = (data, token) => {
     setAuth(token);
-    setUserData(data)
-    setRole(data.role)
+    setUserData(data);
+    setRole(data.role);
     localStorage.setItem("token", token);
     localStorage.setItem("role", data.role);
   };
@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
 
       if (res.status === 200) {
         setUserData(res.data);
+        localStorage.setItem("role", res.data.role);
       } else {
         setUserData(null);
       }
@@ -48,13 +49,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (auth) {
-      getUserData()
-    }
+    getUserData();
   }, [auth]);
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout, userData, role, getUserData }}>
+    <AuthContext.Provider
+      value={{ auth, login, logout, userData, role, getUserData }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -11,6 +11,7 @@ import { Pencil, Trash } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import moment from "moment";
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -44,24 +45,36 @@ function Users() {
   return (
     <>
       <div className="xmb-4">
-        <h1 className="text-xl font-semibold">User Lists</h1>
+        <h1 className="text-xl font-semibold">Examineers Lists</h1>
       </div>
       <Table>
-        <TableCaption>list of users.</TableCaption>
+        <TableCaption>list of examineers.</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>First Name</TableHead>
-            <TableHead>Last Name</TableHead>
-            <TableHead>Action</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Gender</TableHead>
+            <TableHead>Birthdate</TableHead>
+            <TableHead>Contact</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Address</TableHead>
+            <TableHead>Guardian</TableHead>
+            <TableHead>Guardian Contact</TableHead>
+            {/* <TableHead>Action</TableHead> */}
           </TableRow>
         </TableHeader>
         <TableBody>
           {users.length ? (
             users.map((user) => (
               <TableRow key={user._id}>
-                <TableCell className="font-medium">{user.firstName}</TableCell>
-                <TableCell>{user.lastName}</TableCell>
-                <TableCell>
+                <TableCell className="font-medium">{[user.firstName, user.middleName, user.lastName].filter(Boolean).join(' ')}</TableCell>
+                <TableCell>{user.gender}</TableCell>
+                <TableCell>{moment(user.birthdate).format('ll')}</TableCell>
+                <TableCell>{user.contact}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.address}</TableCell>
+                <TableCell>{user.guardian}</TableCell>
+                <TableCell>{user.guardianContact}</TableCell>
+                {/* <TableCell>
                   <div className="flex gap-2">
                     <Pencil
                       color="green"
@@ -70,12 +83,12 @@ function Users() {
                     />
                     <Trash color="red" size={18} className="cursor-pointer" />
                   </div>
-                </TableCell>
+                </TableCell> */}
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell className="font-medium text-center !py-5" colSpan={5}>
+              <TableCell className="font-medium text-center !py-5" colSpan={8}>
                 No user to show
               </TableCell>
             </TableRow>

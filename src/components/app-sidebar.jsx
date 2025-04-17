@@ -3,7 +3,7 @@ import {
   NotebookText,
   PieChart,
   BookMarked,
-  GraduationCap
+  GraduationCap,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -16,6 +16,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useAuth } from "@/auth/auth-context";
 
 // This is sample data.
 const data = {
@@ -24,12 +25,7 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  main: [
-    {
-      name: "Dashboard",
-      url: "/",
-      icon: PieChart,
-    },
+  admin: [
     {
       name: "Strands",
       url: "/strands",
@@ -46,16 +42,26 @@ const data = {
       icon: GraduationCap,
     },
   ],
+  userLink: [
+    {
+      name: "Dashboard",
+      url: "/",
+      icon: PieChart,
+    },
+  ],
 };
 
 export function AppSidebar({ ...props }) {
+  const { role } = useAuth();
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher/>
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.main} />
+        {role && role === 'user' && <NavMain items={data.userLink} />}
+        {role && role === 'admin' && <NavMain items={data.admin} />}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

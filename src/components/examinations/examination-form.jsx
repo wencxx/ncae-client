@@ -15,6 +15,7 @@ import { PlusCircle } from "lucide-react";
 export function ExaminationForm({ onSubmit, onCancel }) {
   const [quizName, setName] = useState("");
   const [timeLimit, setTimeLimit] = useState(1);
+  const [passingGrade, setPassingGrade] = useState();
   const [questions, setQuestions] = useState([
     {
       text: "",
@@ -62,6 +63,7 @@ export function ExaminationForm({ onSubmit, onCancel }) {
     onSubmit({
       quizName,
       timeLimit,
+      passingGrade,
       questions: questionsWithIds,
     });
   };
@@ -77,6 +79,17 @@ export function ExaminationForm({ onSubmit, onCancel }) {
               value={quizName}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter examination name"
+              required
+            />
+          </div>
+          <div className="space-y-2 mt-2">
+            <Label htmlFor="exam-name">Passing Grade</Label>
+            <Input
+              id="exam-name"
+              value={passingGrade}
+              type='number'
+              onChange={(e) => setPassingGrade(e.target.value)}
+              placeholder="Enter passing grade in percent"
               required
             />
           </div>

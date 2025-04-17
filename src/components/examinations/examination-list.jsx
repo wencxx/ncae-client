@@ -43,7 +43,6 @@ export function ExaminationList() {
       const newExamination = {
         ...examination,
         id: crypto.randomUUID(),
-        createdAt: new Date(),
       };
 
       const res = await axios.post(
@@ -142,6 +141,7 @@ export function ExaminationList() {
           <TableRow>
             <TableHead>Examination Name</TableHead>
             <TableHead>Number of Questions</TableHead>
+            <TableHead>Passing Grade</TableHead>
             <TableHead>Time Limit</TableHead>
             <TableHead>Created Date</TableHead>
             <TableHead>Status</TableHead>
@@ -154,12 +154,13 @@ export function ExaminationList() {
               <TableRow key={exam._id}>
                 <TableCell className="font-medium">{exam.quizName}</TableCell>
                 <TableCell>{exam.questions.length}</TableCell>
+                <TableCell>{exam.passingGrade}%</TableCell>
                 <TableCell>{exam.timeLimit}</TableCell>
                 <TableCell>{formatDate(exam.createdAt)}</TableCell>
                 <TableCell>{exam.status}</TableCell>
                 <TableCell>
                   <div className="flex gap-x-1">
-                    <Pencil color="green" size={18} className="cursor-pointer" />
+                    {/* <Pencil color="green" size={18} className="cursor-pointer" /> */}
                     <Trash color="red" size={18} className="cursor-pointer" onClick={() => deleteExamination(exam._id)} />
                   </div>
                 </TableCell>
@@ -167,7 +168,7 @@ export function ExaminationList() {
             ))
           ) : (
             <TableRow>
-              <TableCell className="text-center py-5" colSpan={5}>
+              <TableCell className="text-center py-5" colSpan={6}>
                 No examinations available
               </TableCell>
             </TableRow>
@@ -196,8 +197,8 @@ export function ExaminationList() {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action cannot be undone. This will permanently delete examination
+               and all related data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

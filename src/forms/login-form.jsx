@@ -11,16 +11,19 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export function LoginForm({ className, ...props }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { login } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loggingIn, setLoggingIn] = useState(false)
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
+      setLoggingIn(true)
       const res = await axios.post(
         `${import.meta.env.VITE_ENDPOINT}auth/login`,
         {
@@ -28,13 +31,18 @@ export function LoginForm({ className, ...props }) {
           password,
         },
         {
-          validateStatus: status => status < 500
+          validateStatus: (status) => status < 500,
         }
       );
 
       if (res.status === 200) {
-        login(res.data, res.data.token)
-        navigate('/')
+        login(res.data, res.data.token);
+
+        if(res.data.role === 'admin'){
+          navigate("/strands");
+        }else{
+          navigate("/");
+        }
       } else if (res.status === 401) {
         toast.error("Invalid password", {
           position: "top-center",
@@ -45,11 +53,13 @@ export function LoginForm({ className, ...props }) {
         });
       }
     } catch (error) {
-      console.log(error)
-      toast.error('Server error', {
-        description: 'Please try again later.',
-        position: 'top-center'
-      })
+      console.log(error);
+      toast.error("Server error", {
+        description: "Please try again later.",
+        position: "top-center",
+      });
+    } finally {
+      setLoggingIn(false)
     }
   };
 
@@ -84,15 +94,7 @@ export function LoginForm({ className, ...props }) {
                 />
               </div>
               <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -100,12 +102,12 @@ export function LoginForm({ className, ...props }) {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" className={`w-full ${loggingIn && 'animate-pulse'}`} disabled={loggingIn}>
+                {loggingIn ? 'Logging In' : 'Login'}
               </Button>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <Link to='/register' className="underline underline-offset-4">
+                <Link to="/register" className="underline underline-offset-4">
                   Sign up
                 </Link>
               </div>

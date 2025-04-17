@@ -9,6 +9,9 @@ import Register from "./pages/register";
 import Dashboard from "./pages/dashboard";
 import Strand from "./pages/strands";
 import Examinations from "./pages/examinations";
+import ExaminationsList from "./pages/examinations-lists";
+import TakeExam from "./pages/take-exam";
+import Results from "./pages/results";
 import Users from "./pages/users";
 
 export default function App() {
@@ -33,9 +36,17 @@ export default function App() {
             }
           />
 
-          <Route element={<RequireAuth allowedRoles={["user", "admin"]} />}>
+          <Route element={<RequireAuth allowedRoles={["user"]} />}>
             <Route element={<Layout />}>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/examinations-list" element={<ExaminationsList />} />
+              <Route path="/take-exam/:id" element={<TakeExam />} />
+              <Route path="/results" element={<Results />} />
+            </Route>
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={["admin"]} />}>
+            <Route element={<Layout />}>
               <Route path="/strands" element={<Strand />} />
               <Route path="/examinations" element={<Examinations />} />
               <Route path="/users" element={<Users />} />
