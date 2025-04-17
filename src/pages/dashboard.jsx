@@ -31,6 +31,31 @@ export default function StudentProfile() {
   // get preferred strand
   const [items, setItems] = useState([]);
 
+  const getStrand = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_ENDPOINT}strands/get`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        setItems(res.data);
+      } else {
+        setItems([]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getStrand();
+  }, []);
+
   return (
     <div className="px-4">
       <h1 className="text-3xl font-bold mb-6">Student Profile</h1>
@@ -116,15 +141,17 @@ export default function StudentProfile() {
                   <div className="flex items-center gap-3" key={index}>
                     <Badge
                       className={`${
-                        index === 0 ? "bg-green-500" : index === 1 ? "bg-blue-500" : "bg-purple-500"
+                        index === 0
+                          ? "bg-green-500"
+                          : index === 1
+                          ? "bg-blue-500"
+                          : "bg-purple-500"
                       }`}
                     >
                       {index + 1}
                     </Badge>
                     <div>
-                      <h3 className="font-medium">
-                        {strand?.strandAbbr}
-                      </h3>
+                      <h3 className="font-medium">{strand?.strandAbbr}</h3>
                       <p className="text-sm text-muted-foreground">
                         {strand?.strandName}
                       </p>
