@@ -18,7 +18,7 @@ export function TeamSwitcher() {
             <img src='/logo.png' alt="school logo" />
           </div>
           <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">Divine Meru College Foundation</span>
+            <span className="truncate font-medium">Divine Mercy College Foundation</span>
             <span className="truncate text-xs">Incorporation</span>
           </div>
         </SidebarMenuButton>

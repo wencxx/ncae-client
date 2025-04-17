@@ -71,7 +71,8 @@ function PreferredStrand({ openPreffered, setOpenPreffered, items }) {
             Please select three(3)preffered strands to take examinations.
           </DialogDescription>
         </DialogHeader>
-        <Form {...form}>
+        {items.length ? (
+          <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
@@ -134,6 +135,9 @@ function PreferredStrand({ openPreffered, setOpenPreffered, items }) {
             </Button>
           </form>
         </Form>
+        ) : (
+          <p className="animate-pulse">Loading strands...</p>
+        )}
       </DialogContent>
     </Dialog>
   );
