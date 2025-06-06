@@ -257,15 +257,16 @@ export default function TakeExamPage() {
                 {currentQuestion?.choices.map((choice) => (
                   <div
                     key={choice.id}
-                    className={`flex items-center space-x-2 rounded-md border p-4 ${
-                      isSubmitted
-                        ? choice.id === currentQuestion?.correctAnswer
-                          ? "border-green-500 bg-green-50 dark:bg-green-950/20"
-                          : selectedAnswers[currentQuestion?.id] === choice.id
-                          ? "border-red-500 bg-red-50 dark:bg-red-950/20"
-                          : ""
-                        : ""
-                    }`}
+                    // className={`flex items-center space-x-2 rounded-md border p-4 ${
+                    //   isSubmitted
+                    //     ? choice.id === currentQuestion?.correctAnswer
+                    //       ? "border-green-500 bg-green-50 dark:bg-green-950/20"
+                    //       : selectedAnswers[currentQuestion?.id] === choice.id
+                    //       ? "border-red-500 bg-red-50 dark:bg-red-950/20"
+                    //       : ""
+                    //     : ""
+                    // }`} show correct answer
+                    className={`flex items-center space-x-2 rounded-md border p-4`}
                   >
                     <RadioGroupItem value={choice.id} id={choice.id} />
                     <Label
@@ -273,10 +274,10 @@ export default function TakeExamPage() {
                       className="flex w-full cursor-pointer justify-between"
                     >
                       {choice.text}
-                      {isSubmitted &&
+                      {/* {isSubmitted &&
                         choice.id === currentQuestion?.correctAnswer && (
                           <CheckCircle className="h-5 w-5 text-green-500" />
-                        )}
+                        )} show check mark for the correct answer */}
                     </Label>
                   </div>
                 ))}

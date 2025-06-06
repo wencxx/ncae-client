@@ -19,6 +19,7 @@ export default function Results() {
   const [answers, setAnswers] = useState([]);
   const [overallGrade, setOverallGrade] = useState();
   const [recommendedStrand, setRecommendedStrand] = useState([]);
+  const [mostRecommended, setMostRecommended] = useState(null);
 
   // get examination
   const getExamination = async () => {
@@ -48,9 +49,30 @@ export default function Results() {
       const sum = answers.reduce((acc, curr) => acc + curr.percentage, 0);
       const overAll = sum / answers.length;
 
-      const passedStrands = userData?.prefferedStrand.filter(strand => strand.passingGrade <= overAll)
+      const passedStrands = userData?.prefferedStrand.filter(
+        (strand) => strand.passingGrade <= overAll
+      );
       setOverallGrade(overAll);
-      setRecommendedStrand(passedStrands)
+      setRecommendedStrand(passedStrands);
+
+      // Find the most recommended strand: closest passingGrade to overAll, prioritize highest passingGrade
+      if (passedStrands && passedStrands.length > 0) {
+        let most = passedStrands[0];
+        let minDiff = overAll - most.passingGrade;
+        for (let s of passedStrands) {
+          const diff = overAll - s.passingGrade;
+          if (
+            diff < minDiff ||
+            (diff === minDiff && s.passingGrade > most.passingGrade)
+          ) {
+            most = s;
+            minDiff = diff;
+          }
+        }
+        setMostRecommended(most);
+      } else {
+        setMostRecommended(null);
+      }
     }
   }, [answers]);
 
@@ -61,9 +83,9 @@ export default function Results() {
           Examinations Result
         </h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          View your exam scores and see the Recommended Strand based on your selected preference.
-          performance. This helps you choose the most suitable academic track
-          aligned with your strengths.
+          View your exam scores and see the Recommended Strand based on your
+          selected preference. performance. This helps you choose the most
+          suitable academic track aligned with your strengths.
         </p>
       </div>
 
@@ -73,31 +95,43 @@ export default function Results() {
           <BookOpen className="mr-2 h-5 w-5" /> Recommended Strands
         </h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {recommendedStrand?.length ? (
-            recommendedStrand?.map((strand, index) => (
-              <Card key={index} className="flex flex-col h-full">
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{strand.strandAbbr}</CardTitle>
-                    <Award className="h-8 w-8 text-emerald-500" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {strand.strandName}
-                  </p>
-                </CardContent>
-              </Card>
-            ))
-          ) : (
-            'No recommended strand'
-          )}
+          {recommendedStrand?.length
+            ? recommendedStrand?.map((strand, index) => (
+                <Card key={index} className="flex flex-col h-full">
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-center">
+                      {mostRecommended &&
+                        strand.strandAbbr === mostRecommended.strandAbbr && (
+                          <span className="text-xs font-semibold text-emerald-600">
+                            Most Recommended
+                          </span>
+                        )}
+                        <Badge className='ml-auto' variant='outline'>{strand.passingGrade}%</Badge>
+                    </div>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl">
+                          {strand.strandAbbr}
+                        </CardTitle>
+                      </div>
+                      <Award className="h-8 w-8 text-emerald-500" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">
+                      {strand.strandName}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))
+            : "No recommended strand"}
         </div>
       </div>
 
       {/* Exam Results Section */}
       <h2 className="text-2xl font-bold tracking-tight mb-1 flex items-center">
-        <FileText className="mr-2 h-5 w-5" /> Exam Results (Total Grade: {overallGrade}%)
+        <FileText className="mr-2 h-5 w-5" /> Exam Results (Total Grade:{" "}
+        {overallGrade}%)
       </h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {answers.length ? (

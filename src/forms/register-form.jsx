@@ -35,6 +35,8 @@ export function RegisterForm({ className, ...props }) {
   const [address, setAddress] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [grade, setGrade] = useState("");
+  const [section, setSection] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -58,6 +60,8 @@ export function RegisterForm({ className, ...props }) {
           address,
           username,
           password,
+          grade,
+          section,
           prefferedStrand: [],
         },
         {
@@ -136,7 +140,7 @@ export function RegisterForm({ className, ...props }) {
               <div className="grid gap-3">
                 <Label htmlFor="gender">Gender</Label>
                 <Select onValueChange={setGender} required>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a gender" />
                   </SelectTrigger>
                   <SelectContent>
@@ -172,6 +176,24 @@ export function RegisterForm({ className, ...props }) {
                   id="email"
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="grade">Grade</Label>
+                <Input
+                  id="grade"
+                  type="text"
+                  onChange={(e) => setGrade(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="section">Section</Label>
+                <Input
+                  id="section"
+                  type="text"
+                  onChange={(e) => setSection(e.target.value)}
                   required
                 />
               </div>

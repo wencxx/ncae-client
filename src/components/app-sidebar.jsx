@@ -27,24 +27,24 @@ const data = {
   },
   admin: [
     {
-      name: "Strands",
+      name: "STRANDS",
       url: "/strands",
       icon: BookMarked,
     },
     {
-      name: "Examinations",
+      name: "EXAMINATIONS",
       url: "/examinations",
       icon: NotebookText,
     },
     {
-      name: "Users",
+      name: "USERS",
       url: "/users",
       icon: GraduationCap,
     },
   ],
   userLink: [
     {
-      name: "Dashboard",
+      name: "DASHBOARD",
       url: "/",
       icon: PieChart,
     },
